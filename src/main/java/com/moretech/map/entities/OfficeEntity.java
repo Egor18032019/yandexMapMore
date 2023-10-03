@@ -3,7 +3,7 @@ package com.moretech.map.entities;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.awt.*;
+import java.util.List;
 
 
 @Setter
@@ -20,7 +20,7 @@ public class OfficeEntity {
     Boolean currencyExchange;
     Boolean cardIssue;
 
-    String coords; //point: [56.800584, 60.675637]} координаты отделения
+    List<String> coords; //point: [56.800584, 60.675637]} координаты отделения
 
     Integer latitude; //56
     Long decLatitude;//800584
@@ -31,7 +31,7 @@ public class OfficeEntity {
     Integer roureLength;
 
     public OfficeEntity(Long id, Integer numberOffice, Boolean withdrawCash, Boolean currencyExchange, Boolean cardIssue,
-                        String coords, Integer latitude, Long decLatitude, Integer longitude, Long decLongitude) {
+                        List<String> coords, Integer latitude, Long decLatitude, Integer longitude, Long decLongitude) {
         this.id = id;
         this.numberOffice = numberOffice;
         this.withdrawCash = withdrawCash;

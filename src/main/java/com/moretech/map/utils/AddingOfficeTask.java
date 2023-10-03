@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moretech.map.entities.OfficeEntity;
-import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,18 @@ public class AddingOfficeTask {
             JsonNode geometry = features.get(i).path("geometry");
             JsonNode coordinates = geometry.path("coordinates");
             //[54.101291,54.102436]
+
+            List<String> coordinatesAsList = new ArrayList<>();
+            for (JsonNode str : coordinates) {
+                coordinatesAsList.add(str.toString());
+            }
+
             OfficeEntity office = new OfficeEntity();
-            office.setCoords(coordinates.toString());
-            String foo = String.valueOf(coordinates.get(0));
-            String bar = String.valueOf(coordinates.get(1));
+            office.setCoords(coordinatesAsList);
+            String foo = coordinatesAsList.get(0);
+            String bar = coordinatesAsList.get(1);
             Integer latitude = Integer.valueOf(foo.split("\\.")[0]);
-            Long decLatitude = Long.valueOf( foo.split("\\.")[1]); //101291
+            Long decLatitude = Long.valueOf(foo.split("\\.")[1]); //101291
             Integer longitude = Integer.valueOf(bar.split("\\.")[0]); //54
             Long decLongitude = Long.valueOf(bar.split("\\.")[1]); //102436
             office.setLatitude(latitude);
@@ -36,9 +41,9 @@ public class AddingOfficeTask {
             office.setDecLongitude(decLongitude);
             int roureLength = (int) (Math.random() * 1000);
             office.setRoureLength(roureLength);
-            office.setWithdrawCash((int) (Math.random() * 10)%2==0);
-            office.setCurrencyExchange((int) (Math.random() * 10)%2==0);
-            office.setCardIssue((int) (Math.random() * 10)%2==0);
+            office.setWithdrawCash((int) (Math.random() * 10) % 2 == 0);
+            office.setCurrencyExchange((int) (Math.random() * 10) % 2 == 0);
+            office.setCardIssue((int) (Math.random() * 10) % 2 == 0);
             list.add(office);
 
         }

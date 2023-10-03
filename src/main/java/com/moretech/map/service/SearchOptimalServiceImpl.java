@@ -36,10 +36,11 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
     public OptimalOfficeRequest giveOptimalOffice(TaskListRequest request) throws JsonProcessingException {
 //        Получает координаты центра отсчета.
         String[] centre = request.getPoint().split(",");
-        int latitude = Integer.parseInt(centre[0].split("\\.")[0]);
-        int longitude = Integer.parseInt(centre[0].split("\\.")[0]);
-        Long decLatitude = Long.valueOf(centre[1].split("\\.")[1]);//800584
-        Long decLongitude = Long.valueOf(centre[1].split("\\.")[1]);//800584
+//        : "54.800584, 54.675637",
+        int longitude = Integer.parseInt(centre[0].trim().split("\\.")[0]);//54.800584
+        int latitude = Integer.parseInt(centre[1].trim().split("\\.")[0]);//54.675637
+        Long decLatitude = Long.valueOf(centre[0].trim().split("\\.")[1]);//800584
+        Long decLongitude = Long.valueOf(centre[1].trim().split("\\.")[1]);//675637
         Point point = new Point(request.getPoint(), latitude, decLatitude, longitude, decLongitude);
 
 //         * Получает отделения в этой окружности(+3) которые подходят по списку задач.
@@ -71,12 +72,12 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
 
 
         //        Считает и сравнивает маршруты до выбранных офисов.
-        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload);
+        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload,request.getPoint());
 
         OfficeEntity answer = neighborhoodTaskWithLength.get(0);
         OptimalOfficeRequest optimalOfficeRequest = new OptimalOfficeRequest();
         optimalOfficeRequest.setWorkload(answer.getWorkload());
-        String uri = answer.getCoords();   //37.62,55.75
+        String uri = answer.getCoords().toString();   //37.62,55.75
         optimalOfficeRequest.setUri(uri);
 
         return optimalOfficeRequest;
