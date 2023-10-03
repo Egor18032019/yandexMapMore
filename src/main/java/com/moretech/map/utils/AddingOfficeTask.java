@@ -21,11 +21,9 @@ public class AddingOfficeTask {
         for (int i = 0; i < features.size(); i++) {
             JsonNode geometry = features.get(i).path("geometry");
             JsonNode coordinates = geometry.path("coordinates");
-            System.out.println(coordinates.toString());
             //[54.101291,54.102436]
             OfficeEntity office = new OfficeEntity();
             office.setCoords(coordinates.toString());
-//            Integer latitude = Integer.valueOf(coordinates.toString().split(",")[0].split("\\.")[0]); //54
             String foo = String.valueOf(coordinates.get(0));
             String bar = String.valueOf(coordinates.get(1));
             Integer latitude = Integer.valueOf(foo.split("\\.")[0]);

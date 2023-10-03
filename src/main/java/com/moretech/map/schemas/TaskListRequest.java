@@ -13,7 +13,6 @@ public class TaskListRequest {
     //координаты откуда
     String point; //point: [56.800584, 60.675637]}
     // список задач
-    // булевого типа или строка ?
     Boolean cardIssue;
     Boolean withdrawCash;
     Boolean currencyExchange;

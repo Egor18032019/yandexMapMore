@@ -6,8 +6,6 @@ import com.moretech.map.repositories.OfficeRepository;
 import com.moretech.map.schemas.OptimalOfficeRequest;
 import com.moretech.map.schemas.Point;
 import com.moretech.map.schemas.TaskListRequest;
-import com.moretech.map.utils.Const;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,15 +40,12 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
         int longitude = Integer.parseInt(centre[0].split("\\.")[0]);
         Long decLatitude = Long.valueOf(centre[1].split("\\.")[1]);//800584
         Long decLongitude = Long.valueOf(centre[1].split("\\.")[1]);//800584
+        Point point = new Point(request.getPoint(), latitude, decLatitude, longitude, decLongitude);
 
-
-        Point point = new Point(request.getPoint(),latitude, decLatitude, longitude, decLongitude);
-
-//        Получает отделения в этой окружности(R примерно 3км) которые подходят по списку задач.
-        //TODO если длина 0 то увеличиваем радиус
+//         * Получает отделения в этой окружности(+3) которые подходят по списку задач.
         List<OfficeEntity> neighborhood = officeRepository.findByCoords(point);
-// Получаем выборку из отделений в neighborhood которые мапяться по списку задач
-        //TODO если длина 0 то увеличиваем радиус
+// Получаем выборку из отделений в neighborhood которые подходят по списку задач
+        //TODO если длина 0 то увеличиваем радиус ?
         List<OfficeEntity> neighborhoodTask = neighborhood.stream()
                 .filter(office -> {
                     if (request.getCardIssue()) {
@@ -70,18 +65,17 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
                     return true;
                 })
                 .toList();
-        //TODO если длина 0 то увеличиваем радиус
-//        Где то берет загруженность.
+        //TODO если загруженость офиса больше 90% исключать из списка ? а если после исключения длина ноль ?
+//        Загруженность в последствии получать от другого сервиса который получает ее например с электронной очереди
         List<OfficeEntity> neighborhoodTaskWithWorkload = workloadOfficeSort.giveMeWorkloadOfficeSort(neighborhoodTask);
 
 
         //        Считает и сравнивает маршруты до выбранных офисов.
-        //TODO если длина 0 то увеличиваем радиус
         List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload);
+
         OfficeEntity answer = neighborhoodTaskWithLength.get(0);
         OptimalOfficeRequest optimalOfficeRequest = new OptimalOfficeRequest();
         optimalOfficeRequest.setWorkload(answer.getWorkload());
-        //TODO или конструктор ??
         String uri = answer.getCoords();   //37.62,55.75
         optimalOfficeRequest.setUri(uri);
 

@@ -16,12 +16,4 @@ public class FeatureCollection   implements Serializable {
     String properties;
     List<Feature> features;
 
-    @Override
-    public String toString() {
-        return "FeatureCollection{" +
-                "type='" + type + '\'' +
-                ", properties='" + properties + '\'' +
-                ", features=" + features +
-                '}';
-    }
 }

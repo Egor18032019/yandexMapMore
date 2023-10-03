@@ -24,7 +24,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Component
 public class OfficeRepository {
-
+    @Deprecated
     private static final List<OfficeEntity> GOOD_ENTITIES = List.of(
             new OfficeEntity(1L, 2, true, true, true, "22.11,33.144",
                     111, 222L, 333, 444L),
@@ -33,6 +33,7 @@ public class OfficeRepository {
             new OfficeEntity(3L, 3, false, false, true, "22.11,33.144",
                     77, 222L, 77, 444L));
 
+    @Deprecated
     public Optional<OfficeEntity> findById(Long id) {
 
         return GOOD_ENTITIES
@@ -41,15 +42,34 @@ public class OfficeRepository {
                 .findFirst();
     }
 
-
+    /**
+     * Получает отделения в этой окружности(+3) которые подходят по списку задач.
+     *
+     * @param point
+     * @return список ближайших офисов
+     * @throws JsonProcessingException
+     */
     public List<OfficeEntity> findByCoords(Point point) throws JsonProcessingException {
-
-        String data = getPostsPlainJSON(point);
-        System.out.println(data);
-
-        return AddingOfficeTask.giveMeOfficeWithTask(data);
+        List<OfficeEntity> officeEntityList = new ArrayList<>();
+        int count = 0;
+        while (officeEntityList.size() == 0) {
+            point.setLongitude(point.getLatitude() + count);
+            point.setLongitude(point.getLongitude() + count);
+            count = count + 3;
+            String data = getPostsPlainJSON(point);
+            System.out.println(data);
+            officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
+        }
+        return officeEntityList;
     }
 
+    /**
+     * Запрос к Яндекс апи для получение списка отделений
+     * Впоследствии заменить на бд у которой хорошая скорость отдачи данных
+     *
+     * @param point
+     * @return
+     */
     public String getPostsPlainJSON(Point point) {
         RestTemplate restTemplate = new RestTemplate();
         String maxLatitude = point.getLatitude() + Const.Radius + "." + point.getDecLatitude();
@@ -60,7 +80,7 @@ public class OfficeRepository {
                 "type=biz&" +
                 "lang=ru_RU&" +
                 "ll=" + point.getCoord() + "&" +// центр
-                "spn=" + maxLatitude +"," + maxLongitude + "&" + // максимум
+                "spn=" + maxLatitude + "," + maxLongitude + "&" + // максимум
                 "apikey=" + apiKey;
         return restTemplate.getForObject(url, String.class);
     }
