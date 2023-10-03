@@ -33,6 +33,7 @@ public class OfficeRepository {
             point.setLongitude(point.getLatitude() + count);
             point.setLongitude(point.getLongitude() + count);
             count = count + 3;
+            // todo радиус в какую сторону должен увеличаться ?
             String data = getPostsPlainJSON(point);
             System.out.println(data);
             officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
