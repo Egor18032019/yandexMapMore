@@ -43,7 +43,7 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
         Long decLongitude = Long.valueOf(centre[1].trim().split("\\.")[1]);//675637
         Point point = new Point(request.getPoint(), latitude, decLatitude, longitude, decLongitude);
 
-//         * Получает отделения в этой окружности(+3) которые подходят по списку задач.
+//         * Получает отделения в этой окружности которые подходят по списку задач.
         List<OfficeEntity> neighborhood = officeRepository.findByCoords(point);
 // Получаем выборку из отделений в neighborhood которые подходят по списку задач
         //TODO если длина 0 то увеличиваем радиус ?
@@ -66,20 +66,26 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
                     return true;
                 })
                 .toList();
+        if (neighborhoodTask.size() == 0) {
+            //TODO запускаем заново поиск ?
+            return null;
+        }
         //TODO если загруженость офиса больше 90% исключать из списка ? а если после исключения длина ноль ?
 //        Загруженность в последствии получать от другого сервиса который получает ее например с электронной очереди
         List<OfficeEntity> neighborhoodTaskWithWorkload = workloadOfficeSort.giveMeWorkloadOfficeSort(neighborhoodTask);
 
 
         //        Считает и сравнивает маршруты до выбранных офисов.
-        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload,request.getPoint());
+        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload, request.getPoint());
 
-        OfficeEntity answer = neighborhoodTaskWithLength.get(0);
-        OptimalOfficeRequest optimalOfficeRequest = new OptimalOfficeRequest();
-        optimalOfficeRequest.setWorkload(answer.getWorkload());
-        String uri = answer.getCoords().toString();   //37.62,55.75
-        optimalOfficeRequest.setUri(uri);
 
-        return optimalOfficeRequest;
+            OfficeEntity answer = neighborhoodTaskWithLength.get(0);
+            OptimalOfficeRequest optimalOfficeRequest = new OptimalOfficeRequest();
+            optimalOfficeRequest.setWorkload(answer.getWorkload());
+            String uri = answer.getCoords().toString();   //37.62,55.75
+            optimalOfficeRequest.setUri(uri);
+
+            return optimalOfficeRequest;
+
     }
 }

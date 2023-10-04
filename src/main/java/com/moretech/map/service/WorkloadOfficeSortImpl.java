@@ -16,7 +16,6 @@ public class WorkloadOfficeSortImpl implements WorkloadOfficeSort {
         List<OfficeEntity> list = new ArrayList<>();
         for (OfficeEntity office : officeEntities) {
             int workLoad = (int) (Math.random() * 100);
-            System.out.println("workLoad " + workLoad);
             office.setWorkload(workLoad);
             list.add(office);
         }

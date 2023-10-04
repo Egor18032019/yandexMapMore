@@ -30,8 +30,8 @@ public class OfficeRepository {
         List<OfficeEntity> officeEntityList = new ArrayList<>();
         int count = 0;
         while (officeEntityList.size() == 0) {
-            point.setLongitude(point.getLatitude() + count);
-            point.setLongitude(point.getLongitude() + count);
+            point.setDecLatitude(point.getDecLatitude() + count);
+            point.setDecLongitude(point.getDecLongitude() + count);
             count = count + 3;
             // todo радиус в какую сторону должен увеличаться ?
             String data = getPostsPlainJSON(point);

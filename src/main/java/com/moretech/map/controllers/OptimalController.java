@@ -22,7 +22,6 @@ public class OptimalController {
         this.searchOptimalServiceImpl = searchOptimalServiceImpl;
     }
 
-
     @Operation(
             summary = "Выдача оптимального отделения",
             description = "Получает список задач клиента\n" +
@@ -30,7 +29,7 @@ public class OptimalController {
     )
     @PostMapping(value = EndPoint.check)
     public OptimalOfficeRequest checkBrackets(@RequestBody() TaskListRequest request) throws JsonProcessingException {
-        // todo проверка на координату ?
+        // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
 
         return searchOptimalServiceImpl.giveOptimalOffice(request);
     }
