@@ -3,7 +3,7 @@ package com.moretech.map.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moretech.map.entities.OfficeEntity;
 import com.moretech.map.repositories.OfficeRepository;
-import com.moretech.map.schemas.OptimalOfficeRequest;
+import com.moretech.map.schemas.OptimalOfficeResponse;
 import com.moretech.map.schemas.Point;
 import com.moretech.map.schemas.TaskListRequest;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,6 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
     }
 
     /*
-
-
 Получает список задач клиента.
 (если нет то => обдумать)
 
@@ -33,15 +31,14 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
 Отдает оптимальное отделение.
  */
     @Override
-    public OptimalOfficeRequest giveOptimalOffice(TaskListRequest request) throws JsonProcessingException {
+    public OptimalOfficeResponse giveOptimalOffice(TaskListRequest request) throws JsonProcessingException {
 //        Получает координаты центра отсчета.
-        String[] centre = request.getPoint().split(",");
-//        : "54.800584, 54.675637",
+        String[] centre = request.getPointCoordinates().split(",");
         int longitude = Integer.parseInt(centre[0].trim().split("\\.")[0]);//54.800584
         int latitude = Integer.parseInt(centre[1].trim().split("\\.")[0]);//54.675637
         Long decLatitude = Long.valueOf(centre[0].trim().split("\\.")[1]);//800584
         Long decLongitude = Long.valueOf(centre[1].trim().split("\\.")[1]);//675637
-        Point point = new Point(request.getPoint(), latitude, decLatitude, longitude, decLongitude);
+        Point point = new Point(request.getPointCoordinates(), latitude, decLatitude, longitude, decLongitude);
 
 //         * Получает отделения в этой окружности которые подходят по списку задач.
         List<OfficeEntity> neighborhood = officeRepository.findByCoords(point);
@@ -68,6 +65,7 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
                 .toList();
         if (neighborhoodTask.size() == 0) {
             //TODO запускаем заново поиск ?
+            // TODO или ответ на фронт и пользователь решает увеличить радиус или уменьшить требования?
             return null;
         }
         //TODO если загруженость офиса больше 90% исключать из списка ? а если после исключения длина ноль ?
@@ -76,16 +74,16 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
 
 
         //        Считает и сравнивает маршруты до выбранных офисов.
-        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload, request.getPoint());
+        List<OfficeEntity> neighborhoodTaskWithLength = routeLengthSort.giveMeListOfficeWithLengthSort(neighborhoodTaskWithWorkload, request.getPointCoordinates());
 
 
-            OfficeEntity answer = neighborhoodTaskWithLength.get(0);
-            OptimalOfficeRequest optimalOfficeRequest = new OptimalOfficeRequest();
-            optimalOfficeRequest.setWorkload(answer.getWorkload());
-            String uri = answer.getCoords().toString();   //37.62,55.75
-            optimalOfficeRequest.setUri(uri);
+        OfficeEntity answer = neighborhoodTaskWithLength.get(0);
+        OptimalOfficeResponse optimalOfficeResponse = new OptimalOfficeResponse();
+        optimalOfficeResponse.setWorkload(answer.getWorkload());
+        String uri = answer.getCoords().toString();   //37.62,55.75
+        optimalOfficeResponse.setUri(uri);
 
-            return optimalOfficeRequest;
+        return optimalOfficeResponse;
 
     }
 }

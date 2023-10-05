@@ -9,7 +9,7 @@ import java.util.*;
 public class WorkloadOfficeSortImpl implements WorkloadOfficeSort {
     //TODO если загруженость офиса больше 90% исключать из списка ? а если после исключения длина ноль ?
     //todo или мы из этого отсортированого списка забираем несколько самых не загруженных ?
-    // а что важнее загрузка или длина ?
+    // а что важнее загрузка или длина ? по опросам длина !
     // отсекание делать позже ?
     @Override
     public List<OfficeEntity> giveMeWorkloadOfficeSort(List<OfficeEntity> officeEntities) {
