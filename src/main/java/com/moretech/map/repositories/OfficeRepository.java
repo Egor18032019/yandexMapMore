@@ -34,7 +34,6 @@ public class OfficeRepository {
             point.setDecLatitude(point.getDecLatitude() + count);
             point.setDecLongitude(point.getDecLongitude() + count);
             count = count + 3;
-            // todo радиус в какую сторону должен увеличаться ?
             String data = getPostsPlainJSON(point);
             officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
         }
@@ -50,6 +49,7 @@ public class OfficeRepository {
      */
     public String getPostsPlainJSON(Point point) {
         RestTemplate restTemplate = new RestTemplate();
+        //TODO или слишком много и надо меньший шак делать ?
         String maxLatitude = point.getLatitude() + Const.Radius + "." + point.getDecLatitude();
         String maxLongitude = point.getLongitude() + Const.Radius + "." + point.getDecLongitude();
         String apiKey = "4492ad26-ceda-410a-a80d-1a5903eb986f";
@@ -64,9 +64,17 @@ public class OfficeRepository {
     }
 
     public List<Office> findAllOffices(Point point) throws JsonProcessingException {
-        String data = getPostsPlainJSON(point);
-        System.out.println(data);
-        return AddingOfficeTask.giveMeAllOffice(data);
+        int count = 0;
+        List<Office> officesList = new ArrayList<>();
+        while (officesList.size() == 0) {
+            point.setDecLatitude(point.getDecLatitude() + count);
+            point.setDecLongitude(point.getDecLongitude() + count);
+            count = count + 3;
+            String data = getPostsPlainJSON(point);
+            System.out.println(data);
+            officesList = AddingOfficeTask.giveMeAllOffice(data);
+        }
+        return officesList;
     }
 }
 /*

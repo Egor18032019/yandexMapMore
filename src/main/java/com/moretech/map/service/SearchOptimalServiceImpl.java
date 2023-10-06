@@ -88,6 +88,8 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
     @Override
     public OfficesResponse getAllOffices(Point point) throws JsonProcessingException {
         List<Office> neighborhood = officeRepository.findAllOffices(point);
+
+
         return new OfficesResponse(neighborhood);
     }
 }

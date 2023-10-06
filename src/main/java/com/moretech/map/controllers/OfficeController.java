@@ -46,8 +46,13 @@ public class OfficeController {
     @GetMapping(value = EndPoint.all)
     public OfficesResponse getMeOptimalOffice(
             @Parameter(schema = @Schema(implementation = OfficesResponse.class))
-            @RequestBody() Point request) throws JsonProcessingException {
-
+            @RequestBody() Point request) throws JsonProcessingException, CheckException {
+        if (request.getCoordinates().trim().isEmpty()) {
+            throw new CheckException("Coordinates point not transmitted", "Координаты точки не переданы");
+        }
+        if (!request.getCoordinates().contains(".")) {
+            throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
+        }
         return searchOptimalServiceImpl.getAllOffices(request);
     }
 

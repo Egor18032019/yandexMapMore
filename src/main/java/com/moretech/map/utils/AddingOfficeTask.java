@@ -46,15 +46,12 @@ public class AddingOfficeTask {
             office.setCurrencyExchange((int) (Math.random() * 10) % 2 == 0);
             office.setCardIssue((int) (Math.random() * 10) % 2 == 0);
             list.add(office);
-
         }
-
         return list;
     }
 
 
     public static List<Office> giveMeAllOffice(String data) throws JsonProcessingException {
-// Считываем json
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(data);
         JsonNode features = root.path("features");
@@ -63,20 +60,16 @@ public class AddingOfficeTask {
             JsonNode geometry = features.get(i).path("geometry");
             JsonNode coordinates = geometry.path("coordinates");
             //[54.101291,54.102436]
-
             List<String> coordinatesAsList = new ArrayList<>();
             for (JsonNode str : coordinates) {
                 coordinatesAsList.add(str.toString());
             }
-
             Office office = new Office();
             office.setCoordinates(coordinatesAsList);
             int workLoad = (int) (Math.random() * 100);
             office.setWorkload(workLoad);
             list.add(office);
-
         }
-
         return list;
     }
 }
