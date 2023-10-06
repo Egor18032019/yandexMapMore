@@ -21,5 +21,4 @@ public class TaskListRequest {
     Boolean withdrawCash;
     @Schema(description = "true/false обмен валют")
     Boolean currencyExchange;
-
 }

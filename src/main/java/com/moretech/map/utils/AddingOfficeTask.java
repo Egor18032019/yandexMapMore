@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moretech.map.entities.OfficeEntity;
+import com.moretech.map.schemas.Office;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,34 @@ public class AddingOfficeTask {
             office.setWithdrawCash((int) (Math.random() * 10) % 2 == 0);
             office.setCurrencyExchange((int) (Math.random() * 10) % 2 == 0);
             office.setCardIssue((int) (Math.random() * 10) % 2 == 0);
+            list.add(office);
+
+        }
+
+        return list;
+    }
+
+
+    public static List<Office> giveMeAllOffice(String data) throws JsonProcessingException {
+// Считываем json
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(data);
+        JsonNode features = root.path("features");
+        List<Office> list = new ArrayList<>();
+        for (int i = 0; i < features.size(); i++) {
+            JsonNode geometry = features.get(i).path("geometry");
+            JsonNode coordinates = geometry.path("coordinates");
+            //[54.101291,54.102436]
+
+            List<String> coordinatesAsList = new ArrayList<>();
+            for (JsonNode str : coordinates) {
+                coordinatesAsList.add(str.toString());
+            }
+
+            Office office = new Office();
+            office.setCoordinates(coordinatesAsList);
+            int workLoad = (int) (Math.random() * 100);
+            office.setWorkload(workLoad);
             list.add(office);
 
         }

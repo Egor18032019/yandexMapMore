@@ -3,9 +3,7 @@ package com.moretech.map.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moretech.map.entities.OfficeEntity;
 import com.moretech.map.repositories.OfficeRepository;
-import com.moretech.map.schemas.OptimalOfficeResponse;
-import com.moretech.map.schemas.Point;
-import com.moretech.map.schemas.TaskListRequest;
+import com.moretech.map.schemas.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -85,5 +83,11 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
 
         return optimalOfficeResponse;
 
+    }
+
+    @Override
+    public OfficesResponse getAllOffices(Point point) throws JsonProcessingException {
+        List<Office> neighborhood = officeRepository.findAllOffices(point);
+        return new OfficesResponse(neighborhood);
     }
 }

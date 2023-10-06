@@ -2,8 +2,7 @@ package com.moretech.map.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moretech.map.exception.CheckException;
-import com.moretech.map.schemas.OptimalOfficeResponse;
-import com.moretech.map.schemas.TaskListRequest;
+import com.moretech.map.schemas.*;
 import com.moretech.map.service.SearchOptimalServiceImpl;
 import com.moretech.map.utils.EndPoint;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +30,7 @@ public class OfficeController {
                     "    Отдает оптимальное отделение"
     )
     @PostMapping(value = EndPoint.check)
-    public OptimalOfficeResponse checkBrackets(
+    public OptimalOfficeResponse getMeOptimalOffice(
             @Parameter(schema = @Schema(implementation = TaskListRequest.class))
             @RequestBody() TaskListRequest request) throws JsonProcessingException, CheckException {
         // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
@@ -43,6 +42,15 @@ public class OfficeController {
         }
         return searchOptimalServiceImpl.giveOptimalOffice(request);
     }
+
+    @GetMapping(value = EndPoint.all)
+    public OfficesResponse getMeOptimalOffice(
+            @Parameter(schema = @Schema(implementation = OfficesResponse.class))
+            @RequestBody() Point request) throws JsonProcessingException {
+
+        return searchOptimalServiceImpl.getAllOffices(request);
+    }
+
 }
 /*
 POST http://localhost:8080/api/check

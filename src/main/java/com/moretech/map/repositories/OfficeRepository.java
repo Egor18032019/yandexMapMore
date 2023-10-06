@@ -2,6 +2,7 @@ package com.moretech.map.repositories;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moretech.map.entities.OfficeEntity;
+import com.moretech.map.schemas.Office;
 import com.moretech.map.schemas.Point;
 import com.moretech.map.utils.AddingOfficeTask;
 import com.moretech.map.utils.Const;
@@ -35,7 +36,6 @@ public class OfficeRepository {
             count = count + 3;
             // todo радиус в какую сторону должен увеличаться ?
             String data = getPostsPlainJSON(point);
-            System.out.println(data);
             officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
         }
         return officeEntityList;
@@ -54,13 +54,19 @@ public class OfficeRepository {
         String maxLongitude = point.getLongitude() + Const.Radius + "." + point.getDecLongitude();
         String apiKey = "4492ad26-ceda-410a-a80d-1a5903eb986f";
         String url = "https://search-maps.yandex.ru/v1/?" +
-                "text=Сбербанк&" +
+                "text=ВТБ&" +
                 "type=biz&" +
                 "lang=ru_RU&" +
-                "ll=" + point.getCoord() + "&" +// центр
+                "ll=" + point.getCoordinates() + "&" +// центр
                 "spn=" + maxLatitude + "," + maxLongitude + "&" + // максимум
                 "apikey=" + apiKey;
         return restTemplate.getForObject(url, String.class);
+    }
+
+    public List<Office> findAllOffices(Point point) throws JsonProcessingException {
+        String data = getPostsPlainJSON(point);
+        System.out.println(data);
+        return AddingOfficeTask.giveMeAllOffice(data);
     }
 }
 /*

@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "Координаты клиента")
 public class Point {
-    String coord;
+    String coordinates;
     Integer latitude; //56
     Long decLatitude;//800584
     Integer longitude;//60
