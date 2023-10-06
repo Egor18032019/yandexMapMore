@@ -34,7 +34,7 @@ public class OfficeController {
             @Parameter(schema = @Schema(implementation = TaskListRequest.class))
             @RequestBody() TaskListRequest request) throws JsonProcessingException, CheckException {
         // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
-        if (request.getPointCoordinates().trim().isEmpty()) {
+        if (request.getPointCoordinates() == null || request.getPointCoordinates().trim().isEmpty()) {
             throw new CheckException("Coordinates point not transmitted", "Координаты точки не переданы");
         }
         if (!request.getPointCoordinates().contains(".")) {
@@ -47,7 +47,7 @@ public class OfficeController {
     public OfficesResponse getMeOptimalOffice(
             @Parameter(schema = @Schema(implementation = OfficesResponse.class))
             @RequestBody() Point request) throws JsonProcessingException, CheckException {
-        if (request.getCoordinates().trim().isEmpty()) {
+        if (request.getCoordinates() == null || request.getCoordinates().trim().isEmpty()) {
             throw new CheckException("Coordinates point not transmitted", "Координаты точки не переданы");
         }
         if (!request.getCoordinates().contains(".")) {
