@@ -12,10 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "Координаты клиента")
 public class Point {
-    //todo сделать описание, не понятно в чём разница между coordinates и др координатами
     String coordinates;
-    Integer latitude; //56
-    Long decLatitude;//800584
-    Integer longitude;//60
-    Long decLongitude;//675637
+
 }

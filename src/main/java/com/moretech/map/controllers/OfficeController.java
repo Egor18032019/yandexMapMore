@@ -36,7 +36,7 @@ public class OfficeController {
             @RequestBody() TaskListRequest request) throws JsonProcessingException, CheckException {
         // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
 
-        if (checkRequest.checkTaskListRequest(request)) {
+        if (!checkRequest.isCheckTaskListRequestPassed(request)) {
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
 
@@ -48,7 +48,7 @@ public class OfficeController {
             @Parameter(schema = @Schema(implementation = OfficesResponse.class))
             @RequestBody() Point request) throws JsonProcessingException, CheckException {
 
-        if(checkRequest.checkPoint(request)){
+        if(!checkRequest.isCheckPassed(request)){
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
 

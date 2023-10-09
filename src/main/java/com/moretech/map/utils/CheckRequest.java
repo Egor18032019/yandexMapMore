@@ -9,33 +9,22 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class CheckRequest {
 
-    public boolean checkPoint(Point request) {
-        String[] coordination = request.getCoordinates().split(",");
+    public boolean isCheckPassed(Point request) {
+//        String[] coordination = request.getCoordinates().split(",");
 
-        if (request.getCoordinates() == null || request.getCoordinates().trim().isEmpty()) {
+        // минимум может быть 6,5
+        if (request.getCoordinates().trim().isEmpty()) {
 
-            return true;
-        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) {
-
-            return true;
-        } else if (request.getLongitude() <= 0 && request.getDecLongitude() <= 0
-                && request.getDecLatitude() <= 0 && request.getLatitude() <= 0) {
-
-            return true;
-        } else
             return false;
+//        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) { // минимум может быть 6,5
+//
+//            return true;
+        } else return request.getCoordinates().length() > 3;
     }
 
-    public boolean checkTaskListRequest(TaskListRequest request) {
-        String[] coordination = request.getPointCoordinates().split(",");
-
-        if (request.getPointCoordinates() == null || request.getPointCoordinates().trim().isEmpty()) {
-
+    public boolean isCheckTaskListRequestPassed(TaskListRequest request) {
+        if (!request.getPointCoordinates().trim().isEmpty()) {
             return true;
-        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) {
-
-            return true;
-        } else
-            return false;
+        } else return request.getPointCoordinates().length() > 3;
     }
 }

@@ -1,5 +1,5 @@
 package com.moretech.map.utils;
 
 public class Const {
-    public static final int Radius = 3;
+    public static final int RadiusPlus = 1;
 }

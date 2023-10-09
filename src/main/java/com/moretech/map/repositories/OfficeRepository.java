@@ -31,11 +31,10 @@ public class OfficeRepository {
         List<OfficeEntity> officeEntityList = new ArrayList<>();
         int count = 0;
         while (officeEntityList.size() == 0) {
-            point.setDecLatitude(point.getDecLatitude() + count);
-            point.setDecLongitude(point.getDecLongitude() + count);
-            count = count + 3;
-            String data = getPostsPlainJSON(point);
+
+            String data = getPostsPlainJSON(point, count);
             officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
+            count = count + Const.RadiusPlus;
         }
         return officeEntityList;
     }
@@ -47,11 +46,17 @@ public class OfficeRepository {
      * @param point
      * @return
      */
-    public String getPostsPlainJSON(Point point) {
+    public String getPostsPlainJSON(Point point, int count) {
         RestTemplate restTemplate = new RestTemplate();
-        //TODO или слишком много и надо меньший шак делать ?
-        String maxLatitude = point.getLatitude() + Const.Radius + "." + point.getDecLatitude();
-        String maxLongitude = point.getLongitude() + Const.Radius + "." + point.getDecLongitude();
+        //TODO или слишком много и надо меньший шаг делать ?
+//        Получает координаты центра отсчета.
+        String[] centre = point.getCoordinates().split(",");
+        int longitude = Integer.parseInt(centre[0].trim().split("\\.")[0]);//54.800584
+        int latitude = Integer.parseInt(centre[1].trim().split("\\.")[0]);//54.675637
+        long decLatitude = Long.parseLong(centre[0].trim().split("\\.")[1]);//800584
+        long decLongitude = Long.parseLong(centre[1].trim().split("\\.")[1]);//675637
+        String maxLatitude = latitude + count + "." + decLatitude;
+        String maxLongitude = longitude + count + "." + decLongitude;
         String apiKey = "4492ad26-ceda-410a-a80d-1a5903eb986f";
         String url = "https://search-maps.yandex.ru/v1/?" +
                 "text=ВТБ&" +
@@ -67,10 +72,9 @@ public class OfficeRepository {
         int count = 0;
         List<Office> officesList = new ArrayList<>();
         while (officesList.size() == 0) {
-            point.setDecLatitude(point.getDecLatitude() + count);
-            point.setDecLongitude(point.getDecLongitude() + count);
+
             count = count + 3;
-            String data = getPostsPlainJSON(point);
+            String data = getPostsPlainJSON(point, count);
             System.out.println(data);
             officesList = AddingOfficeTask.giveMeAllOffice(data);
         }
