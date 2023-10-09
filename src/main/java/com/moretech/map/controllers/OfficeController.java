@@ -4,25 +4,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moretech.map.exception.CheckException;
 import com.moretech.map.schemas.*;
 import com.moretech.map.service.SearchOptimalServiceImpl;
+import com.moretech.map.utils.CheckRequest;
 import com.moretech.map.utils.EndPoint;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Отвечает за обработку запросов, связанных с офисам/отделениями")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(EndPoint.api)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OfficeController {
     SearchOptimalServiceImpl searchOptimalServiceImpl;
+    CheckRequest checkRequest;
 
-    public OfficeController(SearchOptimalServiceImpl searchOptimalServiceImpl) {
-        this.searchOptimalServiceImpl = searchOptimalServiceImpl;
-    }
 
     @Operation(
             summary = "Выдача оптимального отделения",
@@ -34,12 +35,11 @@ public class OfficeController {
             @Parameter(schema = @Schema(implementation = TaskListRequest.class))
             @RequestBody() TaskListRequest request) throws JsonProcessingException, CheckException {
         // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
-        if (request.getPointCoordinates() == null || request.getPointCoordinates().trim().isEmpty()) {
-            throw new CheckException("Coordinates point not transmitted", "Координаты точки не переданы");
-        }
-        if (!request.getPointCoordinates().contains(".")) {
+
+        if (checkRequest.checkTaskListRequest(request)) {
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
+
         return searchOptimalServiceImpl.giveOptimalOffice(request);
     }
 
@@ -47,12 +47,12 @@ public class OfficeController {
     public OfficesResponse getMeOptimalOffice(
             @Parameter(schema = @Schema(implementation = OfficesResponse.class))
             @RequestBody() Point request) throws JsonProcessingException, CheckException {
-        if (request.getCoordinates() == null || request.getCoordinates().trim().isEmpty()) {
-            throw new CheckException("Coordinates point not transmitted", "Координаты точки не переданы");
-        }
-        if (!request.getCoordinates().contains(".")) {
+
+        if(checkRequest.checkPoint(request)){
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
+
+
         return searchOptimalServiceImpl.getAllOffices(request);
     }
 
