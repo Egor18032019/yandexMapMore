@@ -24,7 +24,6 @@ public class OfficeController {
     SearchOptimalServiceImpl searchOptimalServiceImpl;
     CheckRequest checkRequest;
 
-
     @Operation(
             summary = "Выдача оптимального отделения",
             description = "Получает список задач клиента\n" +
@@ -34,9 +33,7 @@ public class OfficeController {
     public OptimalOfficeResponse getMeOptimalOffice(
             @Parameter(schema = @Schema(implementation = TaskListRequest.class))
             @RequestBody() TaskListRequest request) throws JsonProcessingException, CheckException {
-        // todo проверка на координату ? похожа ли координата на координату(максимальная/минимальная долгота и широта)
-
-        if (!checkRequest.isCheckTaskListRequestPassed(request)) {
+        if ( checkRequest.isCheckTaskListRequestNotPassed(request)) {
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
 
@@ -48,10 +45,9 @@ public class OfficeController {
             @Parameter(schema = @Schema(implementation = OfficesResponse.class))
             @RequestBody() Point request) throws JsonProcessingException, CheckException {
 
-        if(!checkRequest.isCheckPassed(request)){
+        if( checkRequest.isCheckNotPassed(request)){
             throw new CheckException("Incorrect coordinate format", "Не правильный формат координат");
         }
-
 
         return searchOptimalServiceImpl.getAllOffices(request);
     }

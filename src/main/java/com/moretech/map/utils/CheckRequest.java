@@ -9,22 +9,21 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class CheckRequest {
 
-    public boolean isCheckPassed(Point request) {
-//        String[] coordination = request.getCoordinates().split(",");
-
-        // минимум может быть 6,5
+    public boolean isCheckNotPassed(Point request) {
+        String coordination = request.getCoordinates();
         if (request.getCoordinates().trim().isEmpty()) {
-
-            return false;
-//        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) { // минимум может быть 6,5
-//
-//            return true;
-        } else return request.getCoordinates().length() > 3;
+            return true;
+        } else if (!coordination.contains(",")) {
+            return true;
+        } else return request.getCoordinates().length() < 3;
     }
 
-    public boolean isCheckTaskListRequestPassed(TaskListRequest request) {
-        if (!request.getPointCoordinates().trim().isEmpty()) {
+    public boolean isCheckTaskListRequestNotPassed(TaskListRequest request) {
+        String coordination = request.getPointCoordinates();
+        if (coordination.trim().isEmpty()) {
             return true;
-        } else return request.getPointCoordinates().length() > 3;
+        } else if (!coordination.contains(",")) {
+            return true;
+        } else return request.getPointCoordinates().length() < 3;
     }
 }
