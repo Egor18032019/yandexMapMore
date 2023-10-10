@@ -82,11 +82,10 @@ class OfficeControllerTest {
     @Test
     public void goodGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point("56.800584, 60.675637"));
+        String coordinates = "?coordinates=60.497874,56.926760";
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all +coordinates)
+                    )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -95,11 +94,10 @@ class OfficeControllerTest {
     @Test
     public void badGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point(" "));
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        String coordinates = "?coordinates= ";;
+
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof CheckException));
@@ -109,11 +107,9 @@ class OfficeControllerTest {
     @Test
     public void voidGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point("5,"));
+        String coordinates = "?coordinates=60.497874 56.926760";
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof CheckException));
