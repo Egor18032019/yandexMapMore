@@ -9,6 +9,8 @@ import com.moretech.map.utils.Const;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,9 +21,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Component
 public class OfficeRepository {
-
+    @Autowired
+    private Environment env;
     /**
-     * Получает отделения в этой окружности(+3) которые подходят по списку задач.
+     * Получает отделения, которые подходят по списку задач.
      *
      * @param point
      * @return список ближайших офисов
@@ -31,11 +34,10 @@ public class OfficeRepository {
         List<OfficeEntity> officeEntityList = new ArrayList<>();
         int count = 0;
         while (officeEntityList.size() == 0) {
-            point.setDecLatitude(point.getDecLatitude() + count);
-            point.setDecLongitude(point.getDecLongitude() + count);
-            count = count + 3;
-            String data = getPostsPlainJSON(point);
+
+            String data = getPostsPlainJSON(point, count);
             officeEntityList = AddingOfficeTask.giveMeOfficeWithTask(data);
+            count = count + Const.RadiusPlus;
         }
         return officeEntityList;
     }
@@ -47,12 +49,19 @@ public class OfficeRepository {
      * @param point
      * @return
      */
-    public String getPostsPlainJSON(Point point) {
+    public String getPostsPlainJSON(Point point, int count) {
         RestTemplate restTemplate = new RestTemplate();
-        //TODO или слишком много и надо меньший шак делать ?
-        String maxLatitude = point.getLatitude() + Const.Radius + "." + point.getDecLatitude();
-        String maxLongitude = point.getLongitude() + Const.Radius + "." + point.getDecLongitude();
-        String apiKey = "4492ad26-ceda-410a-a80d-1a5903eb986f";
+        //TODO или слишком много и надо меньший шаг делать ?
+//        Получает координаты центра отсчета.
+        String[] centre = point.getCoordinates().split(",");
+        int longitude = Integer.parseInt(centre[0].trim().split("\\.")[0]);//54.800584
+        int latitude = Integer.parseInt(centre[1].trim().split("\\.")[0]);//54.675637
+        long decLatitude = Long.parseLong(centre[0].trim().split("\\.")[1]);//800584
+        long decLongitude = Long.parseLong(centre[1].trim().split("\\.")[1]);//675637
+        String maxLatitude = latitude + count + "." + decLatitude;
+        String maxLongitude = longitude + count + "." + decLongitude;
+
+        String apiKey = env.getProperty("egor.yandex.key");
         String url = "https://search-maps.yandex.ru/v1/?" +
                 "text=ВТБ&" +
                 "type=biz&" +
@@ -61,17 +70,16 @@ public class OfficeRepository {
                 "spn=" + maxLatitude + "," + maxLongitude + "&" + // максимум
                 "apikey=" + apiKey;
         return restTemplate.getForObject(url, String.class);
+
     }
 
     public List<Office> findAllOffices(Point point) throws JsonProcessingException {
         int count = 0;
         List<Office> officesList = new ArrayList<>();
         while (officesList.size() == 0) {
-            point.setDecLatitude(point.getDecLatitude() + count);
-            point.setDecLongitude(point.getDecLongitude() + count);
+
             count = count + 3;
-            String data = getPostsPlainJSON(point);
-            System.out.println(data);
+            String data = getPostsPlainJSON(point, count);
             officesList = AddingOfficeTask.giveMeAllOffice(data);
         }
         return officesList;

@@ -30,13 +30,8 @@ public class SearchOptimalServiceImpl implements SearchOptimalService {
  */
     @Override
     public OptimalOfficeResponse giveOptimalOffice(TaskListRequest request) throws JsonProcessingException {
-//        Получает координаты центра отсчета.
-        String[] centre = request.getPointCoordinates().split(",");
-        int longitude = Integer.parseInt(centre[0].trim().split("\\.")[0]);//54.800584
-        int latitude = Integer.parseInt(centre[1].trim().split("\\.")[0]);//54.675637
-        Long decLatitude = Long.valueOf(centre[0].trim().split("\\.")[1]);//800584
-        Long decLongitude = Long.valueOf(centre[1].trim().split("\\.")[1]);//675637
-        Point point = new Point(request.getPointCoordinates(), latitude, decLatitude, longitude, decLongitude);
+
+        Point point = new Point(request.getPointCoordinates() );
 
 //         * Получает отделения в этой окружности которые подходят по списку задач.
         List<OfficeEntity> neighborhood = officeRepository.findByCoords(point);

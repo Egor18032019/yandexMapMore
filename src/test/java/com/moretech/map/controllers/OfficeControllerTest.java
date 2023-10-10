@@ -38,7 +38,6 @@ class OfficeControllerTest {
 
     @Schema(description = "Тест на POST запрос с корректным телом запроса")
     @Test
-    //todo Тест работает не всегда, нужно будет обработать все исключения в коде
     public void goodPostRequest() throws Exception {
 
         String json = new ObjectMapper().writeValueAsString(new TaskListRequest("56.800584, 60.675637", true, true, true));
@@ -69,7 +68,7 @@ class OfficeControllerTest {
     @Test
     public void voidPostRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new TaskListRequest("56.803205, 57673256", true, true, true));
+        String json = new ObjectMapper().writeValueAsString(new TaskListRequest("56.803205 57673256", true, true, true));
 
         this.mockMvc.perform(post(EndPoint.api + EndPoint.check)
                         .contentType("application/json")
@@ -83,11 +82,10 @@ class OfficeControllerTest {
     @Test
     public void goodGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point("56.800584, 60.675637", 56, 800584L, 60, 675637L));
+        String coordinates = "?coordinates=60.497874,56.926760";
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all +coordinates)
+                    )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -96,11 +94,10 @@ class OfficeControllerTest {
     @Test
     public void badGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point("", 56, 800584L, 60, 675637L));
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        String coordinates = "?coordinates= ";;
+
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof CheckException));
@@ -110,11 +107,9 @@ class OfficeControllerTest {
     @Test
     public void voidGetRequest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(new Point("56.800584, 60675637", 56, 800584L, 60, 675637L));
+        String coordinates = "?coordinates=60.497874 56.926760";
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all)
-                        .contentType("application/json")
-                        .content(json))
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof CheckException));

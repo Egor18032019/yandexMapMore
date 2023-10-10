@@ -9,33 +9,21 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class CheckRequest {
 
-    public boolean checkPoint(Point request) {
-        String[] coordination = request.getCoordinates().split(",");
-
-        if (request.getCoordinates() == null || request.getCoordinates().trim().isEmpty()) {
-
+    public boolean isCheckNotPassed(Point request) {
+        String coordination = request.getCoordinates();
+        if (request.getCoordinates().trim().isEmpty()) {
             return true;
-        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) {
-
+        } else if (!coordination.contains(",")) {
             return true;
-        } else if (request.getLongitude() <= 0 && request.getDecLongitude() <= 0
-                && request.getDecLatitude() <= 0 && request.getLatitude() <= 0) {
-
-            return true;
-        } else
-            return false;
+        } else return request.getCoordinates().length() < 3;
     }
 
-    public boolean checkTaskListRequest(TaskListRequest request) {
-        String[] coordination = request.getPointCoordinates().split(",");
-
-        if (request.getPointCoordinates() == null || request.getPointCoordinates().trim().isEmpty()) {
-
+    public boolean isCheckTaskListRequestNotPassed(TaskListRequest request) {
+        String coordination = request.getPointCoordinates();
+        if (coordination.trim().isEmpty()) {
             return true;
-        } else if (!coordination[0].contains(".") || !coordination[1].contains(".")) {
-
+        } else if (!coordination.contains(",")) {
             return true;
-        } else
-            return false;
+        } else return request.getPointCoordinates().length() < 3;
     }
 }

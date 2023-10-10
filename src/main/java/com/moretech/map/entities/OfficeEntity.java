@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PROTECTED)
+@ToString
 public class OfficeEntity {
     Long id;
     Integer numberOffice;
@@ -21,7 +22,7 @@ public class OfficeEntity {
     Boolean cardIssue;
 
     List<String> coords; //point: [56.800584, 60.675637]} координаты отделения
-
+    //TODO координаты таким образом нужны если будет принято решение на то что бы офисы брали из какой то БД а не из стороннего сервиса
     Integer latitude; //56
     Long decLatitude;//800584
     Integer longitude;//60
@@ -44,21 +45,5 @@ public class OfficeEntity {
         this.decLongitude = decLongitude;
     }
 
-    @Override
-    public String toString() {
-        return "OfficeEntity{" +
-                "id=" + id +
-                ", numberOffice=" + numberOffice +
-                ", withdrawCash=" + withdrawCash +
-                ", currencyExchange=" + currencyExchange +
-                ", cardIssue=" + cardIssue +
-                ", coords='" + coords + '\'' +
-                ", latitude=" + latitude +
-                ", decLatitude=" + decLatitude +
-                ", longitude=" + longitude +
-                ", decLongitude=" + decLongitude +
-                ", workload=" + workload +
-                ", roureLength=" + roureLength +
-                '}';
-    }
+
 }

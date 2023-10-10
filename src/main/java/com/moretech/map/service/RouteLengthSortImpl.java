@@ -55,8 +55,7 @@ public class RouteLengthSortImpl implements RouteLengthSort {
                 assert data != null;
                 JsonNode routes = data.path("routes");
                 JsonNode distance = routes.get(0).path("distance");
-                System.out.println(distance.toString());
-                System.out.println(distance);
+
                 int roureLength = distance.asInt();
                 office.setRoureLength(roureLength);
                 list.add(office);

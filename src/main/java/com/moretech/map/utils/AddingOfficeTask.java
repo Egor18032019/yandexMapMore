@@ -42,9 +42,9 @@ public class AddingOfficeTask {
             office.setDecLongitude(decLongitude);
             int roureLength = (int) (Math.random() * 1000);
             office.setRoureLength(roureLength);
-            office.setWithdrawCash((int) (Math.random() * 10) % 2 == 0);
-            office.setCurrencyExchange((int) (Math.random() * 10) % 2 == 0);
-            office.setCardIssue((int) (Math.random() * 10) % 2 == 0);
+            office.setWithdrawCash(latitude % 2 == 0);
+            office.setCurrencyExchange(longitude % 2 == 0);
+            office.setCardIssue(coordinatesAsList.size() % 2 == 0);
             list.add(office);
         }
         return list;
