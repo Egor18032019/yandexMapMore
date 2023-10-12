@@ -2,28 +2,28 @@ package com.moretech.map.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moretech.map.entities.OfficeEntity;
 import lombok.AllArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 @Service
 @AllArgsConstructor
 public class RouteLengthSortImpl implements RouteLengthSort {
-    private final WebClient webClient;
+
     //TODO заглушка .. Найти как яндекс апи отдает маршрут и от туда получать длину
     @Override
-    public List<OfficeEntity> giveMeListOfficeWithLengthSort(List<OfficeEntity> officeEntities, String point) throws JsonProcessingException {
+    public List<OfficeEntity> giveMeListOfficeWithLengthSort(List<OfficeEntity> officeEntities, String point) {
         RestTemplate restTemplate = new RestTemplate();
         List<OfficeEntity> list = new ArrayList<>();
         for (OfficeEntity office : officeEntities) {
@@ -61,7 +61,7 @@ public class RouteLengthSortImpl implements RouteLengthSort {
                 list.add(office);
         } catch (RestClientException e) {
                 System.out.println(e.getMessage());
-                System.out.println("получение маршрута не удалось");;
+                System.out.println("получение маршрута не удалось");
             }
 
 
