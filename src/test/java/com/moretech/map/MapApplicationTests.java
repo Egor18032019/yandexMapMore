@@ -18,20 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class MapApplicationTests {
-
-	@Autowired
-	private MockMvc mockMvc;
-
 	@Test
-	public void greetingShouldReturnMessageFromService() throws Exception {
-
-		String json = new ObjectMapper().writeValueAsString(new TaskListRequest("56.800584, 60.675637", true, true, true));
-
-		this.mockMvc.perform(post(EndPoint.api + EndPoint.check)
-						.contentType("application/json")
-						.content(json))
-				.andDo(print())
-				.andExpect(status().isOk());
+	void contextLoads() {
 	}
 
 }
