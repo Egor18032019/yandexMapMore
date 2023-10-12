@@ -39,9 +39,3 @@ jobs:
         run: mvn -B package --file pom.xml
 
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
