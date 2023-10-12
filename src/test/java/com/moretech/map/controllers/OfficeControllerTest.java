@@ -17,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,9 +34,7 @@ class OfficeControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private SearchOptimalServiceImpl service;
-    @Autowired
-    private CheckRequest checkRequest;
+    private WebApplicationContext webApplicationContext;
 
     @Schema(description = "Тест на POST запрос с корректным телом запроса")
     @Test
@@ -43,9 +43,11 @@ class OfficeControllerTest {
         String json = new ObjectMapper().writeValueAsString(new TaskListRequest("56.800584, 60.675637", true, true, true));
         System.out.println(json);
 
-        this.mockMvc.perform(post(EndPoint.api + EndPoint.check)
-                        .contentType("application/json")
-                        .content(json))
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post(EndPoint.api + EndPoint.check)
+//                post(EndPoint.api + EndPoint.check)
+                                .contentType("application/json")
+                                .content(json))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -84,8 +86,8 @@ class OfficeControllerTest {
 
         String coordinates = "?coordinates=60.497874,56.926760";
 
-        this.mockMvc.perform(get(EndPoint.api + EndPoint.all +coordinates)
-                    )
+        this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates)
+                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -95,7 +97,8 @@ class OfficeControllerTest {
     public void badGetRequest() throws Exception {
 
 
-        String coordinates = "?coordinates= ";;
+        String coordinates = "?coordinates= ";
+        ;
 
         this.mockMvc.perform(get(EndPoint.api + EndPoint.all + coordinates))
                 .andDo(print())
